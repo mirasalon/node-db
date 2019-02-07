@@ -1,5 +1,7 @@
 // @flow
 import React from "react";
+import R from "ramda";
+import _ from "lodash";
 import NodeDB from "./store";
 import { createStore, combineReducers, compose } from "redux";
 import NodeDBCreators, { nodeDBReducer } from "./store";
@@ -21,63 +23,42 @@ const getStore = () => {
   return store;
 };
 
-test("Dummy test", () => {
-  expect(1 + 1).toBe(2);
-});
-
 test("NodeDB single insertion", () => {
   const store = getStore();
   const { insert } = NodeDBCreators;
+
+  //=====[ Insert ]=====
   const nodeSet = generateNodeSet();
   store.dispatch(insert(nodeSet));
+
+  //=====[ Validate ]=====
   const state = store.getState();
-  expect(state.NodeDB).toEqual(nodeSetToNodeMap(nodeSet));
+  R.keys(nodeSet).map(nodeType => {
+    nodeSet[nodeType].map(node => {
+      expect(state.NodeDB[nodeType][node.id]).toEqual(node);
+    });
+  });
 });
 
-// test("NodeDB multiple insertion", () => {
-//   const store = getStore();
-//   const { insert } = NodeDBCreators;
-//   const _nodes = {
-//     products: [{ id: "a", name: "p1" }, { id: "b", name: "p2" }],
-//     users: [{ id: "c", name: "u1" }, { id: "d", name: "u2" }]
-//   };
-//   store.dispatch(insert(_nodes));
-//   const state = store.getState();
-//   expect(state.NodeDB.products).toEqual({
-//     a: { id: "a", name: "p1" },
-//     b: { id: "b", name: "p2" }
-//   });
-//   expect(state.NodeDB.users).toEqual({
-//     c: { id: "c", name: "u1" },
-//     d: { id: "d", name: "u2" }
-//   });
-// });
+test("NodeDB multiple insertion", () => {
+  const store = getStore();
+  const { insert } = NodeDBCreators;
 
-//   // =====[ Action creators ]=====
-//   expect(typeof multiUpdate).toBe("function");
-//   expect(multiUpdate(_nodes)).toEqual({
-//     payload: _nodes,
-//     type: multiUpdate.toString()
-//   });
+  //=====[ Insert ]=====
+  let nodeSets = [];
+  _.range(0, 100).map(() => {
+    const nodeSet = generateNodeSet();
+    store.dispatch(insert(nodeSet));
+    nodeSets.push(nodeSet);
+  });
 
-//   // =====[ Connect ]=====
-//   // NOTE: this won't be necessary once off kea
-//   const ConnectedComponent = ndb(SampleComponent);
-//   const wrapper = mount(
-//     <Provider store={store}>
-//       <ConnectedComponent id={12} />
-//     </Provider>
-//   );
-
-//   // =====[ Dispatch ]=====
-//   store.dispatch(multiUpdate(_nodes));
-//   const state = store.getState();
-//   expect(state.scenes.NodeDB.products).toEqual({
-//     a: { id: "a", name: "p1" },
-//     b: { id: "b", name: "p2" }
-//   });
-//   expect(state.scenes.NodeDB.users).toEqual({
-//     0: { id: 0, name: "u1" },
-//     1: { id: 1, name: "u2" }
-//   });
-// });
+  //=====[ Validate ]=====
+  const state = store.getState();
+  nodeSets.map(nodeSet => {
+    R.keys(nodeSet).map(nodeType => {
+      nodeSet[nodeType].map(node => {
+        expect(state.NodeDB[nodeType][node.id]).toEqual(node);
+      });
+    });
+  });
+});
