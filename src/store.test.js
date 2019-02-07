@@ -61,11 +61,8 @@ test("NodeDB multiUpdate", () => {
 
   store.dispatch(multiUpdate(_nodes));
   const state = store.getState();
-  console.log(state);
-  // expect(
-  //   state.scenes.NodeDB.products.toEqual({
-  //     a: { id: "a", name: "p1" },
-  //     b: { id: "b", name: "p2" }
-  //   })
-  // );
+  expect(state.scenes.NodeDB.products).toEqual({
+    a: { id: "a", name: "p1" },
+    b: { id: "b", name: "p2" }
+  });
 });
