@@ -38,15 +38,14 @@ const INITIAL_STATE: NodeDBStateType = Immutable.from({});
 
 //=====[ Reducers ]=====
 const insert = (state: NodeDBStateType, { nodes }: { nodes: NodeSet }) => {
-  const allUpdates = {};
+  const updates = {}
   R.keys(nodes).map(nodeType => {
-    const formatted = {};
-    nodes[nodeType].map(n => (formatted[n.id] = n));
-    let table = state[nodeType] || Immutable.from({});
-    table = table.merge(nodes, { deep: true });
-    allUpdates[nodeType] = table;
-  });
-  return state.merge(allUpdates, { deep: true });
+    updates[nodeType] = {};
+    nodes[nodeType].map(node => {
+      updates[nodeType][node.id] = node;
+    })
+  })  
+  return state.merge(updates, { deep: true });
 };
 
 export const nodeDBReducer = createReducer(INITIAL_STATE, {

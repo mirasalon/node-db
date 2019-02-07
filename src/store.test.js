@@ -2,7 +2,7 @@
 import React from "react";
 import NodeDB from "./store";
 import { createStore, combineReducers, compose } from "redux";
-import { nodeDBReducer } from "./store";
+import NodeDBCreators, { nodeDBReducer } from "./store";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
 import { configure } from "enzyme";
@@ -24,15 +24,24 @@ test("Dummy test", () => {
   expect(1 + 1).toBe(2);
 });
 
-
-// test("NodeDB multiUpdate", () => {
-//   const store = getStore();
-//   const ndb = require("./store").default;
-//   const { multiUpdate } = ndb.actions;
-//   const _nodes = {
-//     products: [{ id: "a", name: "p1" }, { id: "b", name: "p2" }],
-//     users: [{ id: 0, name: "u1" }, { id: 1, name: "u2" }]
-//   };
+test("NodeDB single insertion", () => {
+  const store = getStore();
+  const { insert } = NodeDBCreators;
+  const _nodes = {
+    products: [{ id: "a", name: "p1" }, { id: "b", name: "p2" }],
+    users: [{ id: "c", name: "u1" }, { id: "d", name: "u2" }]
+  };
+  store.dispatch(insert(_nodes));
+  const state = store.getState();
+  expect(state.NodeDB.products).toEqual({
+    a: { id: "a", name: "p1" },
+    b: { id: "b", name: "p2" }
+  });
+  expect(state.NodeDB.users).toEqual({
+    c: { id: "c", name: "u1" },
+    d: { id: "d", name: "u2" }
+  });
+});
 
 //   // =====[ Action creators ]=====
 //   expect(typeof multiUpdate).toBe("function");
