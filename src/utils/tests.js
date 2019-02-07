@@ -1,7 +1,17 @@
 import R from "ramda";
+import _ from "lodash";
 import { NodeId, NodeType, Node, NodeSet, NodeMap } from "../types";
 
-const nodeTypes: Array<NodeType> = ["product", "user", "ugcImage", "ugcPost"];
+const sampleNodeTypes: Array<NodeType> = [
+  "product",
+  "user",
+  "ugcImage",
+  "ugcPost",
+  "ugcComment",
+  "video",
+  "image",
+  "ugcImage"
+];
 
 export const generateId = (): NodeId =>
   Math.random()
@@ -18,12 +28,12 @@ export const generateNode = (nodeType: NodeType): Node => ({
 export const generateNodeSet = (nodeType: NodeType = null): NodeSet => {
   if (nodeType)
     return {
-      [nodeType]: [1, 2, 3].map(() => generateNode(nodeType))
+      [nodeType]: _.range(0, 10).map(() => generateNode(nodeType))
     };
   else {
     let nodeSet = {};
-    nodeTypes.map(nodeType => {
-      nodeSet[nodeType] = [1, 2, 3].map(() => generateNode(nodeType));
+    sampleNodeTypes.map(nodeType => {
+      nodeSet[nodeType] = _.range(0, 10).map(() => generateNode(nodeType));
     });
     return nodeSet;
   }

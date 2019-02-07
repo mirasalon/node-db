@@ -106,155 +106,23 @@ export const withProduct = withNode("product");
 export const withoutProduct = withoutNode("product");
 export const withBrand = withNode("brand");
 export const withoutBrand = withoutNode("brand");
+export const withArticle = withNode("article");
+export const withoutArticle = withoutNode("article");
+export const withInfluencer = withNode("influencer");
+export const withoutInfluencer = withoutNode("influencer");
+export const withReview = withNode("review");
+export const withoutReview = withoutNode("review");
+export const withVideo = withNode("video");
+export const withoutVideo = withoutNode("video");
+export const withImage = withNode("image");
+export const withoutImage = withoutNode("image");
+export const withVideoMention = withNode("videoMention");
+export const withoutVideoMention = withoutNode("videoMention");
 export const withUser = withNode("user");
 export const withoutUser = withoutNode("user");
 export const withUGCPost = withNode("ugcPost");
 export const withoutUGCPost = withoutNode("ugcPost");
 export const withUGCComment = withNode("ugcComment");
 export const withoutUGCComment = withoutNode("ugcComment");
-
-/*
-export const withProductImages = compose(
-  withProps(({ productId }) => ({
-    nodeType: "image",
-    indexId: productId
-  })),
-  multiIndexedNodeFetcher
-);
-
-export const withProductIngredients = compose(
-  withProps(({ productId }) => ({
-    nodeType: "ingredient",
-    indexId: productId
-  })),
-  multiIndexedNodeFetcher
-);
-
-export const withCurrentUserId: HOC<
-  { auth: string, currentUserId: NodeId },
-  *
-> = connect(state => ({
-  currentUserId: R.path(["auth", "userId"], state)
-}));
-
-export const withCurrentUser: HOC<{ user: Object }, *> = compose(
-  withCurrentUserId,
-  withProps(({ currentUserId: userId }) => ({ userId })),
-  withUser
-);
-
-export const withPost: HOC<{ ugcPost: UGCPost }, { postId: NodeId }> = compose(
-  withProps(({ postId }) => ({
-    nodeType: "ugcPost",
-    nodeId: postId
-  })),
-  nodeFetcher
-);
-
-export const withoutPost = omitProps(["ugcPost"]);
-
-export const withComment: HOC<
-  { ugcComment: UGCComment },
-  { commentId: NodeId }
-> = compose(
-  withProps(({ commentId }) => ({
-    nodeType: "ugcComment",
-    nodeId: commentId
-  })),
-  nodeFetcher
-);
-
-export const withoutComment = omitProps(["ugcComment"]);
-
-export const withReview: HOC<
-  { review: Object },
-  { reviewId: NodeId }
-> = compose(
-  withProps(({ reviewId }) => ({
-    nodeType: "review",
-    nodeId: reviewId
-  })),
-  nodeFetcher
-);
-
-export const withArticle: HOC<
-  { article: Object },
-  { articleId: NodeId }
-> = compose(
-  withProps(({ articleId }) => ({
-    nodeType: "article",
-    nodeId: articleId
-  })),
-  nodeFetcher
-);
-
-export const withInfluencer: HOC<
-  { influencer: Object },
-  { influencerId: NodeId }
-> = compose(
-  withProps(({ influencerId }) => ({
-    nodeType: "influencer",
-    nodeId: influencerId
-  })),
-  nodeFetcher
-);
-
-export const withoutInfluencer = omitProps(["influencer"]);
-
-export const withVideo: HOC<{ video: Object }, { videoId: NodeId }> = compose(
-  withProps(({ videoId }) => ({
-    nodeType: "video",
-    nodeId: videoId
-  })),
-  nodeFetcher
-);
-
-export const withoutVideo = omitProps(["video"]);
-
-export const withVideoMention: HOC<
-  { mention: Object },
-  { videoId: NodeId }
-> = compose(
-  withProps(({ videoId }) => ({
-    nodeType: "mention",
-    nodeId: videoId
-  })),
-  nodeFetcher
-);
-
-export const withoutVideoMention = omitProps(["mention"]);
-
-export const withFeed: HOC<{ feed: Object }, { feedId: NodeId }> = compose(
-  withProps(({ feedId }) => ({
-    nodeType: "feed",
-    nodeId: feedId
-  })),
-  nodeFetcher
-);
-
-export const withImage: HOC<
-  { ugcImage: Object },
-  { imageId: NodeId }
-> = compose(
-  withProps(({ imageId }) => ({
-    nodeType: "ugcImage",
-    nodeId: imageId
-  })),
-  nodeFetcher
-);
-
-export const withoutImage = omitProps(["ugcImage"]);
-
-export const withSubgraph: HOC<
-  { subgraph: Object },
-  { subgraphId: NodeId }
-> = compose(
-  withProps(({ subgraphId }) => ({
-    nodeType: "subgraph",
-    nodeId: subgraphId
-  })),
-  nodeFetcher
-);
-
-export const withoutSubgraph = omitProps(["subgraph"]);
-*/
+export const withUGCImage = withNode("ugcImage");
+export const withoutUGCImage = withoutNode("ugcImage");
