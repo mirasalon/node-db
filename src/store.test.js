@@ -23,6 +23,10 @@ const getStore = () => {
   return store;
 };
 
+//#############################################################################
+//# INSERTION
+//#############################################################################
+
 test("NodeDB single insertion", () => {
   const store = getStore();
   const { insert } = NodeDBCreators;
@@ -58,6 +62,69 @@ test("NodeDB multiple insertion", () => {
     R.keys(nodeSet).map(nodeType => {
       nodeSet[nodeType].map(node => {
         expect(state.NodeDB[nodeType][node.id]).toEqual(node);
+      });
+    });
+  });
+});
+
+//#############################################################################
+//# DELETION
+//#############################################################################
+
+test("simple insertion => deletion", () => {
+  const store = getStore();
+  const { insert, remove } = NodeDBCreators;
+
+  //=====[ Insert ]=====
+  const nodeSet = generateNodeSet();
+  store.dispatch(insert(nodeSet));
+  R.keys(nodeSet).map(nodeType => {
+    const nodeIds = nodeSet[nodeType].map(node => node.id);
+    store.dispatch(remove(nodeType, nodeIds));
+  });
+
+  //=====[ Validate ]=====
+  const state = store.getState();
+  R.keys(nodeSet).map(nodeType => {
+    nodeSet[nodeType].map(node => {
+      expect(state.NodeDB[nodeType][node.id]).toEqual(undefined);
+    });
+  });
+});
+
+test("NodeDB multiple insertion => deletion", () => {
+  const store = getStore();
+  const { insert, remove } = NodeDBCreators;
+
+  //=====[ Insert ]=====
+  let nodeSets = [];
+  _.range(0, 100).map(() => {
+    const nodeSet = generateNodeSet();
+    store.dispatch(insert(nodeSet));
+    nodeSets.push(nodeSet);
+  });
+  const deleteNodeSets = nodeSets.slice(0, 20);
+  const keepNodeSets = nodeSets.slice(20, 100);
+  deleteNodeSets.map(nodeSet => {
+    R.keys(nodeSet).map(nodeType => {
+      const nodeIds = nodeSet[nodeType].map(node => node.id);
+      store.dispatch(remove(nodeType, nodeIds));
+    });
+  });
+
+  //=====[ Validate ]=====
+  const state = store.getState();
+  keepNodeSets.map(nodeSet => {
+    R.keys(nodeSet).map(nodeType => {
+      nodeSet[nodeType].map(node => {
+        expect(state.NodeDB[nodeType][node.id]).toEqual(node);
+      });
+    });
+  });
+  deleteNodeSets.map(nodeSet => {
+    R.keys(nodeSet).map(nodeType => {
+      nodeSet[nodeType].map(node => {
+        expect(state.NodeDB[nodeType][node.id]).toEqual(undefined);
       });
     });
   });

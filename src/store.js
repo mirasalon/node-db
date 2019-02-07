@@ -14,9 +14,9 @@ import { nodeSetToNodeMap } from "./utils";
 const { Types, Creators } = createActions(
   {
     insert: ["nodes"],
-    delete: ["nodeIds"]
+    remove: ["nodeType", "nodeIds"]
   },
-  { prefix: "NODEDB_" }
+  { prefix: "NODE_DB_" }
 );
 
 export const NodeDBTypes = Types;
@@ -38,11 +38,23 @@ export type NodeDBStateType = Immutable<{
 const INITIAL_STATE: NodeDBStateType = Immutable.from({});
 
 //=====[ Reducers ]=====
-const insert = (state: NodeDBStateType, { nodes }: { nodes: NodeSet }) => {
+const insert = (
+  state: NodeDBStateType,
+  { nodes }: { nodes: NodeSet }
+): NodeDBStateType => {
   const updates = nodeSetToNodeMap(nodes);
   return state.merge(updates, { deep: true });
 };
 
+const remove = (
+  state: NodeDBStateType,
+  { nodeType, nodeIds }: { nodeType: NodeType, nodeIds: Array<NodeId> }
+): NodeDBStateType => {
+  if (!state[nodeType]) return state;
+  return state.update(nodeType, x => x.without(nodeIds));
+};
+
 export const nodeDBReducer = createReducer(INITIAL_STATE, {
-  [Types.INSERT]: insert
+  [Types.INSERT]: insert,
+  [Types.REMOVE]: remove
 });
