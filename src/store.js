@@ -5,7 +5,7 @@ import Immutable from "seamless-immutable";
 import { createReducer, createActions } from "reduxsauce";
 import R from "ramda";
 import type { NodeId, NodeType, NodeSet, NodeMap } from "./types";
-import { nodeSetToNodeMap } from "./utils";
+import { nodeSetToNodeMap } from "./utils/nodes";
 
 //#############################################################################
 //# ACTIONS

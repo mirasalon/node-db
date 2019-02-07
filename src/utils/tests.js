@@ -1,5 +1,5 @@
 import R from "ramda";
-import { NodeId, NodeType, Node, NodeSet, NodeMap } from "./types";
+import { NodeId, NodeType, Node, NodeSet, NodeMap } from "../types";
 
 const nodeTypes: Array<NodeType> = ["product", "user", "ugcImage", "ugcPost"];
 
@@ -27,15 +27,4 @@ export const generateNodeSet = (nodeType: NodeType = null): NodeSet => {
     });
     return nodeSet;
   }
-};
-
-export const nodeSetToNodeMap = (nodeSet: NodeSet): NodeMap => {
-  const nodeMap = {};
-  R.keys(nodeSet).map(nodeType => {
-    nodeMap[nodeType] = {};
-    nodeSet[nodeType].map(node => {
-      nodeMap[nodeType][node.id] = node;
-    });
-  });
-  return nodeMap;
 };
