@@ -11,3 +11,14 @@ export const nodeSetToNodeMap = (nodeSet: NodeSet): NodeMap => {
   });
   return nodeMap;
 };
+
+export const sanitizeNodeType = nodeType => nodeType.replace(/e?s$/, "");
+
+// products => product, searches => search
+export const sanitizeNodeMap = (nodeMap: NodeMap): NodeMap => {
+  const output = {};
+  R.keys(nodeMap).map(nodeType => {
+    output[sanitizeNodeType(nodeType)] = nodeMap[nodeType];
+  });
+  return output;
+};

@@ -5,7 +5,7 @@ import Immutable from "seamless-immutable";
 import { createReducer, createActions } from "reduxsauce";
 import R from "ramda";
 import type { NodeId, NodeType, NodeSet, NodeMap } from "./types";
-import { nodeSetToNodeMap } from "./utils/nodes";
+import { nodeSetToNodeMap, sanitizeNodeMap } from "./utils/nodes";
 
 //#############################################################################
 //# ACTIONS
@@ -42,7 +42,8 @@ const insert = (
   state: NodeDBStateType,
   { nodes }: { nodes: NodeSet }
 ): NodeDBStateType => {
-  const updates = nodeSetToNodeMap(nodes);
+  let updates = nodeSetToNodeMap(nodes);
+  updates = sanitizeNodeMap(updates);
   return state.merge(updates, { deep: true });
 };
 
