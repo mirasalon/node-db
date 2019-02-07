@@ -92,18 +92,26 @@ export default nodeFetcher;
 //# NODE SELECTORS
 //#############################################################################
 
-export const withProduct: HOC<
-  { product: Object },
-  { productId: NodeId }
-> = compose(
-  withProps(({ productId }) => ({
-    nodeType: "product",
-    nodeId: productId
-  })),
-  nodeFetcher
-);
+export const withNode = (nodeType: string) =>
+  compose(
+    withProps(props => ({
+      nodeType,
+      nodeId: props[nodeType + "Id"]
+    })),
+    nodeFetcher
+  );
+export const withoutNode = (nodeType: string) => omitProps([nodeType]);
 
-export const withoutProduct = omitProps(["product"]);
+export const withProduct = withNode("product");
+export const withoutProduct = withoutNode("product");
+export const withBrand = withNode("brand");
+export const withoutBrand = withoutNode("brand");
+export const withUser = withNode("user");
+export const withoutUser = withoutNode("user");
+export const withUGCPost = withNode("ugcPost");
+export const withoutUGCPost = withoutNode("ugcPost");
+export const withUGCComment = withNode("ugcComment");
+export const withoutUGCComment = withoutNode("ugcComment");
 
 /*
 export const withProductImages = compose(
@@ -122,24 +130,6 @@ export const withProductIngredients = compose(
   multiIndexedNodeFetcher
 );
 
-export const withBrand: HOC<{ brand: Object }, { brandId: NodeId }> = compose(
-  withProps(({ brandId }) => ({
-    nodeType: "brand",
-    nodeId: brandId
-  })),
-  nodeFetcher
-);
-
-export const withoutBrand = omitProps(["brand"]);
-
-export const withUser: HOC<{ user: Object }, { userId: NodeId }> = compose(
-  withProps(({ userId }) => ({
-    nodeType: "user",
-    nodeId: userId
-  })),
-  nodeFetcher
-);
-
 export const withCurrentUserId: HOC<
   { auth: string, currentUserId: NodeId },
   *
@@ -152,8 +142,6 @@ export const withCurrentUser: HOC<{ user: Object }, *> = compose(
   withProps(({ currentUserId: userId }) => ({ userId })),
   withUser
 );
-
-export const withoutUser = omitProps(["user"]);
 
 export const withPost: HOC<{ ugcPost: UGCPost }, { postId: NodeId }> = compose(
   withProps(({ postId }) => ({

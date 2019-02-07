@@ -7,6 +7,7 @@ import { createStore, combineReducers, compose } from "redux";
 import NodeDBCreators, { nodeDBReducer } from "./store";
 import { generateNode, generateNodeSet } from "./utils/tests";
 import { nodeSetToNodeMap } from "./utils/nodes";
+import { withProduct, withNode } from "./nodeFetcher";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
 import { configure } from "enzyme";
@@ -135,9 +136,7 @@ test("NodeDB multiple insertion => deletion", () => {
 //# ENHANCERS
 //#############################################################################
 
-import { withProduct } from "./nodeFetcher";
-
-test("enhancer test", () => {
+test("basic enhancer test", () => {
   const store = getStore();
   const { insert } = NodeDBCreators;
 
@@ -145,16 +144,7 @@ test("enhancer test", () => {
   const nodeSet = generateNodeSet();
   store.dispatch(insert(nodeSet));
 
-  //=====[ Validate ]=====
-  const state = store.getState();
-  R.keys(nodeSet).map(nodeType => {
-    nodeSet[nodeType].map(node => {
-      expect(state.NodeDB[nodeType][node.id]).toEqual(node);
-    });
-  });
-
   // =====[ Connect ]=====
-  // NOTE: this won't be necessary once off kea
   const node = nodeSet.product[0];
   const ConnectedComponent = withProduct(SampleComponent);
   const wrapper = mount(
@@ -164,4 +154,29 @@ test("enhancer test", () => {
   );
   const props = wrapper.find(SampleComponent).props();
   expect(props.product).toEqual(node);
+});
+
+test("full enhancer test", () => {
+  const store = getStore();
+  const { insert } = NodeDBCreators;
+
+  //=====[ Insert ]=====
+  const nodeSet = generateNodeSet();
+  store.dispatch(insert(nodeSet));
+
+  // =====[ Connect ]=====
+  R.keys(nodeSet).map(nodeType => {
+    const ConnectedComponent = withNode(nodeType)(SampleComponent);
+    nodeSet[nodeType].map(node => {
+      const idProp = nodeType + "Id";
+      const insertProps = { [idProp]: node.id };
+      const wrapper = mount(
+        <Provider store={store}>
+          <ConnectedComponent {...insertProps} />
+        </Provider>
+      );
+      const props = wrapper.find(SampleComponent).props();
+      expect(props[nodeType]).toEqual(node);
+    });
+  });
 });
