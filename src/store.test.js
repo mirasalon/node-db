@@ -52,6 +52,7 @@ test("NodeDB multiUpdate", () => {
   });
 
   // =====[ Connect ]=====
+  // NOTE: this won't be necessary once off kea
   const ConnectedComponent = ndb(SampleComponent);
   const wrapper = mount(
     <Provider store={store}>
@@ -59,10 +60,15 @@ test("NodeDB multiUpdate", () => {
     </Provider>
   );
 
+  // =====[ Dispatch ]=====
   store.dispatch(multiUpdate(_nodes));
   const state = store.getState();
   expect(state.scenes.NodeDB.products).toEqual({
     a: { id: "a", name: "p1" },
     b: { id: "b", name: "p2" }
+  });
+  expect(state.scenes.NodeDB.users).toEqual({
+    0: { id: 0, name: "u1" },
+    1: { id: 1, name: "u2" }
   });
 });
