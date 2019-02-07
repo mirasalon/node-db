@@ -130,3 +130,38 @@ test("NodeDB multiple insertion => deletion", () => {
     });
   });
 });
+
+//#############################################################################
+//# ENHANCERS
+//#############################################################################
+
+import { withProduct } from "./nodeFetcher";
+
+test("enhancer test", () => {
+  const store = getStore();
+  const { insert } = NodeDBCreators;
+
+  //=====[ Insert ]=====
+  const nodeSet = generateNodeSet();
+  store.dispatch(insert(nodeSet));
+
+  //=====[ Validate ]=====
+  const state = store.getState();
+  R.keys(nodeSet).map(nodeType => {
+    nodeSet[nodeType].map(node => {
+      expect(state.NodeDB[nodeType][node.id]).toEqual(node);
+    });
+  });
+
+  // =====[ Connect ]=====
+  // NOTE: this won't be necessary once off kea
+  const node = nodeSet.product[0];
+  const ConnectedComponent = withProduct(SampleComponent);
+  const wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent productId={node.id} />
+    </Provider>
+  );
+  const props = wrapper.find(SampleComponent).props();
+  expect(props.product).toEqual(node);
+});

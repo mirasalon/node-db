@@ -21,7 +21,7 @@ const omitProps = keys => mapProps(props => R.omit(keys, props));
 const createStoreRetriever = () =>
   createSelector(
     (_, nodeType) => nodeType,
-    state => R.path([..."NodeDB"], state),
+    state => R.path(["NodeDB"], state),
     (type, db) => R.path([type], db)
   );
 
@@ -103,17 +103,9 @@ export const withProduct: HOC<
   nodeFetcher
 );
 
-// When fetching multiple nodes, a
-export const withProducts = compose(
-  withProps(({ productIds }) => ({
-    nodeType: "product",
-    nodeIds: productIds
-  })),
-  multiNodeFetcher
-);
-
 export const withoutProduct = omitProps(["product"]);
 
+/*
 export const withProductImages = compose(
   withProps(({ productId }) => ({
     nodeType: "image",
@@ -277,3 +269,4 @@ export const withSubgraph: HOC<
 );
 
 export const withoutSubgraph = omitProps(["subgraph"]);
+*/
