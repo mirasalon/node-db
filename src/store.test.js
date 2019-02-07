@@ -3,6 +3,7 @@ import React from "react";
 import NodeDB from "./store";
 import { createStore, combineReducers, compose } from "redux";
 import NodeDBCreators, { nodeDBReducer } from "./store";
+import { generateNode, generateNodeSet, nodeSetToNodeMap } from "./utils";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
 import { configure } from "enzyme";
@@ -27,21 +28,30 @@ test("Dummy test", () => {
 test("NodeDB single insertion", () => {
   const store = getStore();
   const { insert } = NodeDBCreators;
-  const _nodes = {
-    products: [{ id: "a", name: "p1" }, { id: "b", name: "p2" }],
-    users: [{ id: "c", name: "u1" }, { id: "d", name: "u2" }]
-  };
-  store.dispatch(insert(_nodes));
+  const nodeSet = generateNodeSet();
+  store.dispatch(insert(nodeSet));
   const state = store.getState();
-  expect(state.NodeDB.products).toEqual({
-    a: { id: "a", name: "p1" },
-    b: { id: "b", name: "p2" }
-  });
-  expect(state.NodeDB.users).toEqual({
-    c: { id: "c", name: "u1" },
-    d: { id: "d", name: "u2" }
-  });
+  expect(state.NodeDB).toEqual(nodeSetToNodeMap(nodeSet));
 });
+
+// test("NodeDB multiple insertion", () => {
+//   const store = getStore();
+//   const { insert } = NodeDBCreators;
+//   const _nodes = {
+//     products: [{ id: "a", name: "p1" }, { id: "b", name: "p2" }],
+//     users: [{ id: "c", name: "u1" }, { id: "d", name: "u2" }]
+//   };
+//   store.dispatch(insert(_nodes));
+//   const state = store.getState();
+//   expect(state.NodeDB.products).toEqual({
+//     a: { id: "a", name: "p1" },
+//     b: { id: "b", name: "p2" }
+//   });
+//   expect(state.NodeDB.users).toEqual({
+//     c: { id: "c", name: "u1" },
+//     d: { id: "d", name: "u2" }
+//   });
+// });
 
 //   // =====[ Action creators ]=====
 //   expect(typeof multiUpdate).toBe("function");

@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 import Immutable from "seamless-immutable";
 import { createReducer, createActions } from "reduxsauce";
 import R from "ramda";
-import type { NodeId, NodeType, NodeSet } from "./types";
+import type { NodeId, NodeType, NodeSet, NodeMap } from "./types";
+import { nodeSetToNodeMap } from "./utils";
 
 //#############################################################################
 //# ACTIONS
@@ -38,13 +39,7 @@ const INITIAL_STATE: NodeDBStateType = Immutable.from({});
 
 //=====[ Reducers ]=====
 const insert = (state: NodeDBStateType, { nodes }: { nodes: NodeSet }) => {
-  const updates = {}
-  R.keys(nodes).map(nodeType => {
-    updates[nodeType] = {};
-    nodes[nodeType].map(node => {
-      updates[nodeType][node.id] = node;
-    })
-  })  
+  const updates = nodeSetToNodeMap(nodes);
   return state.merge(updates, { deep: true });
 };
 
