@@ -1,16 +1,11 @@
 // @flow
+import * as R from "ramda";
 import { connect } from "react-redux";
-
 import { createSelector } from "reselect";
 import { createDeepEqualitySelector } from "./utils/reselect";
-
-import * as R from "ramda";
-
 import { compose, mapProps, withProps } from "recompose";
 import type { HOC } from "recompose";
 import type { NodeId } from "./types";
-
-import NodeDB from "./store";
 
 //#############################################################################
 //# UTILS
