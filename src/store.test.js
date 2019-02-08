@@ -69,6 +69,19 @@ test("NodeDB multiple insertion", () => {
   });
 });
 
+test("NodeDB insertion benchmark", () => {
+  const store = getStore();
+  const { insert } = NodeDBCreators;
+
+  //=====[ Insert ]=====
+  let nodeSets = [];
+  _.range(0, 100).map(() => {
+    const nodeSet = generateNodeSet();
+    store.dispatch(insert(nodeSet));
+    nodeSets.push(nodeSet);
+  });
+});
+
 //#############################################################################
 //# DELETION
 //#############################################################################

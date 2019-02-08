@@ -1,6 +1,4 @@
 // @flow
-import { kea } from "kea";
-import PropTypes from "prop-types";
 import Immutable from "seamless-immutable";
 import { createReducer, createActions } from "reduxsauce";
 import R from "ramda";
