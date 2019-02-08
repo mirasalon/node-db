@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { createSelector } from "reselect";
 import { createDeepEqualitySelector } from "./utils/reselect";
 
-import R from "ramda";
+import * as R from "ramda";
 
 import { compose, mapProps, withProps } from "recompose";
 import type { HOC } from "recompose";

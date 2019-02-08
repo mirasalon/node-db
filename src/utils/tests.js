@@ -1,4 +1,4 @@
-import R from "ramda";
+import * as R from "ramda";
 import _ from "lodash";
 import { NodeId, NodeType, Node, NodeSet, NodeMap } from "../types";
 

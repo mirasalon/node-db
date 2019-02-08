@@ -1,6 +1,6 @@
 // @flow
 import { createSelectorCreator, defaultMemoize } from "reselect";
-import R from "ramda";
+import * as R from "ramda";
 import type { NodeId, NodeArray } from "../types";
 
 export const createDeepEqualitySelector = createSelectorCreator(

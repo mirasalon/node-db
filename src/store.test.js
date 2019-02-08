@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import R from "ramda";
+import * as R from "ramda";
 import _ from "lodash";
 import NodeDB from "./store";
 import { createStore, combineReducers, compose } from "redux";
