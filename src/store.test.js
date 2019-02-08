@@ -7,7 +7,7 @@ import { createStore, combineReducers, compose } from "redux";
 import NodeDBCreators, { nodeDBReducer } from "./store";
 import { generateNode, generateNodeSet } from "./utils/tests";
 import { nodeSetToNodeMap } from "./utils/nodes";
-import { withNode, withoutNode } from "./nodeFetcher";
+import { withNode, withoutNode } from "./index";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
 import { configure } from "enzyme";
