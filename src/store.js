@@ -1,7 +1,7 @@
 // @flow
 import Immutable from "seamless-immutable";
 import { createReducer, createActions } from "reduxsauce";
-import R from "ramda";
+import * as R from "ramda";
 import type { NodeId, NodeType, NodeSet, NodeMap } from "./types";
 import { nodeSetToNodeMap, sanitizeNodeMap } from "./utils/nodes";
 
