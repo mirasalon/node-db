@@ -7,7 +7,7 @@ import { createStore, combineReducers, compose } from "redux";
 import NodeDBCreators, { nodeDBReducer } from "./store";
 import { generateNode, generateNodeSet } from "./utils/tests";
 import { nodeSetToNodeMap } from "./utils/nodes";
-import { withProduct, withNode } from "./nodeFetcher";
+import { withNode, withoutNode } from "./nodeFetcher";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
 import { configure } from "enzyme";
@@ -159,7 +159,7 @@ test("basic enhancer test", () => {
 
   // =====[ Connect ]=====
   const node = nodeSet.product[0];
-  const ConnectedComponent = withProduct(SampleComponent);
+  const ConnectedComponent = withNode("product")(SampleComponent);
   const wrapper = mount(
     <Provider store={store}>
       <ConnectedComponent productId={node.id} />

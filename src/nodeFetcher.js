@@ -65,6 +65,15 @@ const nodeFetcher = connect(() => {
   };
 });
 
+const createNodeFetcher = () =>
+  connect(() => {
+    const valueRetriever = createValueRetriever();
+
+    return (state, { nodeType, nodeId }) => {
+      return { [nodeType]: valueRetriever(state, nodeType, nodeId) };
+    };
+  });
+
 export const multiNodeFetcher = connect(() => {
   const multiNodeRetriever = createMultiNodeRetriever();
 
@@ -87,37 +96,14 @@ export default nodeFetcher;
 //# NODE SELECTORS
 //#############################################################################
 
-export const withNode = (nodeType: string) =>
-  compose(
+export const withoutNode = (nodeType: string) => omitProps([nodeType]);
+
+export const withNode = (nodeType: NodeType) => {
+  return compose(
     withProps(props => ({
       nodeType,
       nodeId: props[nodeType + "Id"]
     })),
-    nodeFetcher
+    createNodeFetcher()
   );
-export const withoutNode = (nodeType: string) => omitProps([nodeType]);
-
-export const withProduct = withNode("product");
-export const withoutProduct = withoutNode("product");
-export const withBrand = withNode("brand");
-export const withoutBrand = withoutNode("brand");
-export const withArticle = withNode("article");
-export const withoutArticle = withoutNode("article");
-export const withInfluencer = withNode("influencer");
-export const withoutInfluencer = withoutNode("influencer");
-export const withReview = withNode("review");
-export const withoutReview = withoutNode("review");
-export const withVideo = withNode("video");
-export const withoutVideo = withoutNode("video");
-export const withImage = withNode("image");
-export const withoutImage = withoutNode("image");
-export const withVideoMention = withNode("videoMention");
-export const withoutVideoMention = withoutNode("videoMention");
-export const withUser = withNode("user");
-export const withoutUser = withoutNode("user");
-export const withUGCPost = withNode("ugcPost");
-export const withoutUGCPost = withoutNode("ugcPost");
-export const withUGCComment = withNode("ugcComment");
-export const withoutUGCComment = withoutNode("ugcComment");
-export const withUGCImage = withNode("ugcImage");
-export const withoutUGCImage = withoutNode("ugcImage");
+};
