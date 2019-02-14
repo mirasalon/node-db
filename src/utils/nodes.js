@@ -12,7 +12,12 @@ export const nodeSetToNodeMap = (nodeSet: NodeSet): NodeMap => {
   return nodeMap;
 };
 
-export const sanitizeNodeType = nodeType => nodeType.replace(/e?s$/, "");
+export const sanitizeNodeType = nodeType => {
+  // special case for image(s), ugcImage(s), search(es) FML
+  if (nodeType.toLowerCase().includes("image"))
+    return nodeType.replace(/s$/, "");
+  else return nodeType.replace(/e?s$/, "");
+};
 
 // products => product, searches => search
 export const sanitizeNodeMap = (nodeMap: NodeMap): NodeMap => {

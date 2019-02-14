@@ -6,7 +6,7 @@ import NodeDB from "./store";
 import { createStore, combineReducers, compose } from "redux";
 import NodeDBCreators, { nodeDBReducer } from "./store";
 import { generateNode, generateNodeSet } from "./utils/tests";
-import { nodeSetToNodeMap } from "./utils/nodes";
+import { nodeSetToNodeMap, sanitizeNodeType } from "./utils/nodes";
 import { withNode, withoutNode } from "./index";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
@@ -132,6 +132,7 @@ test("NodeDB multiple insertion => deletion", () => {
   keepNodeSets.map(nodeSet => {
     R.keys(nodeSet).map(nodeType => {
       nodeSet[nodeType].map(node => {
+        nodeType = sanitizeNodeType(nodeType);
         expect(state.NodeDB[nodeType][node.id]).toEqual(node);
       });
     });
@@ -192,4 +193,79 @@ test("full enhancer test", () => {
       expect(props[nodeType]).toEqual(node);
     });
   });
+});
+
+//#############################################################################
+//# BACKWARDS COMPATIBILITY
+//#############################################################################
+
+test("node type sanitization", () => {
+  expect(sanitizeNodeType("images")).toEqual("image");
+  expect(sanitizeNodeType("image")).toEqual("image");
+  expect(sanitizeNodeType("products")).toEqual("product");
+  expect(sanitizeNodeType("product")).toEqual("product");
+  expect(sanitizeNodeType("searches")).toEqual("search");
+  expect(sanitizeNodeType("search")).toEqual("search");
+});
+
+test("backwards compatibility test: images, ugcImages, etc. ", () => {
+  const store = getStore();
+  const { insert } = NodeDBCreators;
+
+  //=====[ Insert ]=====
+  const deprecatedNodeSet = {
+    images: [generateNode("image"), generateNode("image")],
+    products: [generateNode("product"), generateNode("product")],
+    ugcImages: [generateNode("ugcImage"), generateNode("ugcImage")],
+    searches: [generateNode("search"), generateNode("search")]
+  };
+  store.dispatch(insert(deprecatedNodeSet));
+
+  // =====[ Image ]=====
+  let state = store.getState();
+  let node = deprecatedNodeSet.images[0];
+  let ConnectedComponent = withNode("image")(SampleComponent);
+  let wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent imageId={node.id} />
+    </Provider>
+  );
+  let props = wrapper.find(SampleComponent).props();
+  expect(props.image).toEqual(node);
+
+  // =====[ Product ]=====
+  state = store.getState();
+  node = deprecatedNodeSet.products[0];
+  ConnectedComponent = withNode("product")(SampleComponent);
+  wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent productId={node.id} />
+    </Provider>
+  );
+  props = wrapper.find(SampleComponent).props();
+  expect(props.product).toEqual(node);
+
+  // =====[ Search ]=====
+  state = store.getState();
+  node = deprecatedNodeSet.searches[0];
+  ConnectedComponent = withNode("search")(SampleComponent);
+  wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent searchId={node.id} />
+    </Provider>
+  );
+  props = wrapper.find(SampleComponent).props();
+  expect(props.search).toEqual(node);
+
+  // =====[ ugcImage ]=====
+  state = store.getState();
+  node = deprecatedNodeSet.ugcImages[0];
+  ConnectedComponent = withNode("ugcImage")(SampleComponent);
+  wrapper = mount(
+    <Provider store={store}>
+      <ConnectedComponent ugcImageId={node.id} />
+    </Provider>
+  );
+  props = wrapper.find(SampleComponent).props();
+  expect(props.ugcImage).toEqual(node);
 });

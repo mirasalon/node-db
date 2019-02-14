@@ -9,8 +9,7 @@ const sampleNodeTypes: Array<NodeType> = [
   "ugcPost",
   "ugcComment",
   "video",
-  "image",
-  "ugcImage"
+  "image"
 ];
 
 export const generateId = (): NodeId =>
