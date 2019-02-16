@@ -5,7 +5,7 @@ import { createSelector } from "reselect";
 import { createDeepEqualitySelector } from "./utils/reselect";
 import { compose, mapProps, withProps } from "recompose";
 import type { HOC } from "recompose";
-import type { NodeId } from "./types";
+import type { NodeId, NodeType } from "./types";
 
 //#############################################################################
 //# UTILS
@@ -89,8 +89,6 @@ const multiIndexedNodeFetcher = connect(() => {
     [nodeType]: indexedNodesRetriever(state, nodeType, indexId)
   });
 });
-
-export default nodeFetcher;
 
 //#############################################################################
 //# NODE SELECTORS
