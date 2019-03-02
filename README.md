@@ -5,7 +5,7 @@ NodeDB is a redux-based database for storing normalized objects for fast inserti
 ## Installation
 
 ```
-yarn add https://github.com/mirasalon/node-db.git
+yarn add mirasalon/node-db
 ```
 
 # Development
