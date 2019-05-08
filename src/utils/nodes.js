@@ -16,6 +16,8 @@ export const sanitizeNodeType = nodeType => {
   // special case for image(s), ugcImage(s), search(es) FML
   if (nodeType.toLowerCase().includes("image"))
     return nodeType.replace(/s$/, "");
+  if (nodeType.toLowerCase().includes("stories"))
+    return nodeType.replace(/ies$/, "y");
   else return nodeType.replace(/e?s$/, "");
 };
 

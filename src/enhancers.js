@@ -16,7 +16,7 @@ const omitProps = keys => mapProps(props => R.omit(keys, props));
 const createStoreRetriever = () =>
   createSelector(
     (_, nodeType) => nodeType,
-    state => R.path(["NodeDB"], state),
+    state => R.path(["NodeDB", "nodes"], state),
     (type, db) => R.path([type], db)
   );
 

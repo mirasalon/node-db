@@ -4,7 +4,7 @@ import * as R from "ramda";
 import _ from "lodash";
 import NodeDB from "./store";
 import { createStore, combineReducers, compose } from "redux";
-import NodeDBCreators, { nodeDBReducer } from "./store";
+import NodeDBCreators, { nodeDBReducer, createNodeDBReducer } from "./store";
 import { generateNode, generateNodeSet } from "./utils/tests";
 import { nodeSetToNodeMap, sanitizeNodeType } from "./utils/nodes";
 import { withNode, withoutNode } from "./index";
@@ -17,7 +17,8 @@ configure({ adapter: new Adapter() });
 
 const SampleComponent = () => null;
 
-const getStore = () => {
+const getStore = (indexSpec = {}) => {
+  const nodeDBReducer = createNodeDBReducer(indexSpec);
   const reducers = combineReducers({
     NodeDB: nodeDBReducer
   });
@@ -41,7 +42,7 @@ test("NodeDB single insertion", () => {
   const state = store.getState();
   R.keys(nodeSet).map(nodeType => {
     nodeSet[nodeType].map(node => {
-      expect(state.NodeDB[nodeType][node.id]).toEqual(node);
+      expect(state.NodeDB.nodes[nodeType][node.id]).toEqual(node);
     });
   });
 });
@@ -63,7 +64,7 @@ test("NodeDB multiple insertion", () => {
   nodeSets.map(nodeSet => {
     R.keys(nodeSet).map(nodeType => {
       nodeSet[nodeType].map(node => {
-        expect(state.NodeDB[nodeType][node.id]).toEqual(node);
+        expect(state.NodeDB.nodes[nodeType][node.id]).toEqual(node);
       });
     });
   });
@@ -102,7 +103,7 @@ test("simple insertion => deletion", () => {
   const state = store.getState();
   R.keys(nodeSet).map(nodeType => {
     nodeSet[nodeType].map(node => {
-      expect(state.NodeDB[nodeType][node.id]).toEqual(undefined);
+      expect(state.NodeDB.nodes[nodeType][node.id]).toEqual(undefined);
     });
   });
 });
@@ -133,14 +134,14 @@ test("NodeDB multiple insertion => deletion", () => {
     R.keys(nodeSet).map(nodeType => {
       nodeSet[nodeType].map(node => {
         nodeType = sanitizeNodeType(nodeType);
-        expect(state.NodeDB[nodeType][node.id]).toEqual(node);
+        expect(state.NodeDB.nodes[nodeType][node.id]).toEqual(node);
       });
     });
   });
   deleteNodeSets.map(nodeSet => {
     R.keys(nodeSet).map(nodeType => {
       nodeSet[nodeType].map(node => {
-        expect(state.NodeDB[nodeType][node.id]).toEqual(undefined);
+        expect(state.NodeDB.nodes[nodeType][node.id]).toEqual(undefined);
       });
     });
   });
@@ -206,6 +207,9 @@ test("node type sanitization", () => {
   expect(sanitizeNodeType("product")).toEqual("product");
   expect(sanitizeNodeType("searches")).toEqual("search");
   expect(sanitizeNodeType("search")).toEqual("search");
+  expect(sanitizeNodeType("story")).toEqual("story");
+  expect(sanitizeNodeType("stories")).toEqual("story");
+  expect(sanitizeNodeType("ugcStories")).toEqual("ugcStory");
 });
 
 test("backwards compatibility test: images, ugcImages, etc. ", () => {
@@ -268,4 +272,33 @@ test("backwards compatibility test: images, ugcImages, etc. ", () => {
   );
   props = wrapper.find(SampleComponent).props();
   expect(props.ugcImage).toEqual(node);
+});
+
+//#############################################################################
+//# INDICES
+//#############################################################################
+
+test("NodeDB Index Specification", () => {
+  const indexSpec = {
+    product: ["brandId"],
+    ugcImage: ["productId"]
+  };
+  const store = getStore(indexSpec);
+  const { insert } = NodeDBCreators;
+  const state = store.getState();
+  expect(state.NodeDB.indexSpec).toEqual(indexSpec);
+});
+
+test("NodeDB Index Insertion", () => {
+  const indexSpec = {
+    product: ["indexId1", "indexId2"],
+    ugcImage: ["indexId1", "indexId2"]
+  };
+  const store = getStore(indexSpec);
+  const { insert } = NodeDBCreators;
+  const nodeSet = generateNodeSet();
+  const state = store.getState();
+  store.dispatch(insert(nodeSet));
+
+  expect(state.NodeDB.indexSpec).toEqual(indexSpec);
 });

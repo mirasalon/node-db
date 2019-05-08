@@ -9,7 +9,8 @@ const sampleNodeTypes: Array<NodeType> = [
   "ugcPost",
   "ugcComment",
   "video",
-  "image"
+  "image",
+  "story"
 ];
 
 export const generateId = (): NodeId =>
@@ -18,10 +19,18 @@ export const generateId = (): NodeId =>
     .replace(/[^a-z]+/g, "")
     .substr(0, 10) + "=";
 
-export const generateNode = (nodeType: NodeType): Node => ({
+export const generateNode = (
+  nodeType: NodeType,
+  indexId1: NodeId | null,
+  indexId2: NodeId | null
+): Node => ({
   id: generateId(),
   nodeType: nodeType,
-  otherField: generateId()
+  field1: generateId(),
+  field2: generateId(),
+  field3: generateId(),
+  indexId1: indexId1 ? indexId1 : undefined,
+  indexId2: indexId2 ? indexId2 : undefined
 });
 
 export const generateNodeSet = (nodeType: NodeType = null): NodeSet => {
@@ -32,7 +41,13 @@ export const generateNodeSet = (nodeType: NodeType = null): NodeSet => {
   else {
     let nodeSet = {};
     sampleNodeTypes.map(nodeType => {
-      nodeSet[nodeType] = _.range(0, 10).map(() => generateNode(nodeType));
+      const indexId1s = [generateId(), generateId(), generateId()];
+      const indexId2s = [generateId(), generateId(), generateId()];
+      nodeSet[nodeType] = _.range(0, 10).map(() => {
+        const indexId1 = _.sample(indexId1s);
+        const indexId2 = _.sample(indexId2s);
+        return generateNode(nodeType, indexId1, indexId2);
+      });
     });
     return nodeSet;
   }
