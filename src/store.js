@@ -1,9 +1,10 @@
 // @flow
-import Immutable from "seamless-immutable";
-import { createReducer, createActions } from "reduxsauce";
-import * as R from "ramda";
-import type { NodeId, NodeType, NodeSet, NodeMap, IndexSpec } from "./types";
-import { nodeSetToNodeMap, sanitizeNodeMap } from "./utils/nodes";
+import Immutable from 'seamless-immutable';
+import { createReducer, createActions } from 'reduxsauce';
+import * as R from 'ramda';
+import type { NodeId, NodeType, NodeSet, NodeMap, IndexSpec } from './types';
+import { nodeSetToNodeMap, sanitizeNodeMap } from './utils/nodes';
+import { getIndices, nodeMapToIndex } from './utils/indices';
 
 //#############################################################################
 //# ACTIONS
@@ -11,17 +12,17 @@ import { nodeSetToNodeMap, sanitizeNodeMap } from "./utils/nodes";
 
 const { Types, Creators } = createActions(
   {
-    insert: ["nodes"],
-    remove: ["nodeType", "nodeIds"]
+    insert: ['nodes'],
+    remove: ['nodeType', 'nodeIds']
   },
-  { prefix: "NODE_DB_" }
+  { prefix: 'NODE_DB_' }
 );
 
 export const NodeDBTypes = Types;
 export default Creators;
 
 //#############################################################################
-//# STATE 
+//# STATE
 //#############################################################################
 
 export type NodeDBStateType = Immutable<{
@@ -53,7 +54,6 @@ const INITIAL_STATE: NodeDBStateType = Immutable.from({
   indexSpec: {}
 });
 
-
 //#############################################################################
 //# REDUCERS
 //#############################################################################
@@ -68,13 +68,11 @@ const insert = (
   updates = sanitizeNodeMap(updates);
 
   // =====[ INDICES ]=====
-  if ("product" in state.indexSpec) {
-    // TODO: get index updates
-    // console.log({ products: updates['product'] });
-    // const indexUpdates = 
-  }
+  const newIndices = nodeMapToIndex(updates, state.indexSpec);
 
-  return state.merge({ nodes: updates }, { deep: true });
+  return state
+    .merge({ nodes: updates }, { deep: true })
+    .update('indices', R.mergeDeepWith(R.concat, R.__, newIndices));
 };
 
 const remove = (
@@ -92,7 +90,6 @@ export const nodeDBReducer = createReducer(INITIAL_STATE, {
   [Types.INSERT]: insert,
   [Types.REMOVE]: remove
 });
-
 
 //#############################################################################
 //# CREATION WITH INDICES
