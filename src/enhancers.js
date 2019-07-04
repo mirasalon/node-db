@@ -11,7 +11,7 @@ const getNode = (nodeType, nodeId) =>
   R.path(['NodeDB', 'nodes', nodeType, nodeId]);
 
 const createNodeTypeFetcher = (nodeType: NodeType) =>
-  connect(() => (state, { nodeId }) => ({
+  connect((state, { nodeId }) => ({
     [nodeType]: getNode(nodeType, nodeId)(state)
   }));
 
@@ -21,7 +21,7 @@ const createIndexedNodeFetcher = (
   nodeType: NodeType,
   indexedPropName: string
 ) =>
-  connect(() => (state, { indexId }) => ({
+  connect((state, { indexId }) => ({
     [`indexed${capitalize(nodeType)}Set`]: R.compose(
       R.map(nodeId => getNode(nodeType, nodeId)(state)),
       R.pathOr([], ['NodeDB', 'indices', nodeType, indexedPropName, indexId])
@@ -34,13 +34,11 @@ const createIndexedNodeFetcher = (
 export const withoutNode = (nodeType: string) => mapProps(R.omit([nodeType]));
 
 export const withNode = (nodeType: NodeType) => {
-  const fetcher = createNodeTypeFetcher(nodeType);
-
   return compose(
     withProps(props => ({
       nodeId: props[nodeType + 'Id']
     })),
-    fetcher
+    createNodeTypeFetcher(nodeType)
   );
 };
 
@@ -48,10 +46,8 @@ export const withIndexedNodes = (
   nodeType: NodeType,
   indexedPropName: string
 ) => {
-  const fetcher = createIndexedNodeFetcher(nodeType, indexedPropName);
-
   return compose(
     withProps(() => ({ nodeType, indexedPropName })),
-    fetcher
+    createIndexedNodeFetcher(nodeType, indexedPropName)
   );
 };

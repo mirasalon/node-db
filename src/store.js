@@ -2,9 +2,9 @@
 import Immutable from 'seamless-immutable';
 import { createReducer, createActions } from 'reduxsauce';
 import * as R from 'ramda';
-import type { NodeId, NodeType, NodeSet, NodeMap, IndexSpec } from './types';
+import type { NodeId, NodeType, NodeSet, IndexSpec } from './types';
 import { nodeSetToNodeMap, sanitizeNodeMap } from './utils/nodes';
-import { getIndices, nodeMapToIndex } from './utils/indices';
+import { nodeMapToIndex } from './utils/indices';
 
 //#############################################################################
 //# ACTIONS
