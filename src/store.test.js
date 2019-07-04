@@ -6,7 +6,7 @@ import { createStore, combineReducers } from 'redux';
 import NodeDBCreators, { createNodeDBReducer } from './store';
 import { generateNode, generateNodeSet } from './utils/tests';
 import { sanitizeNodeType } from './utils/nodes';
-import { withNode } from './index';
+import { withNode, withIndexedNodes } from './index';
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { configure } from 'enzyme';
@@ -282,20 +282,20 @@ describe('NodeDB Indexing ', () => {
     store = getStore(indexSpec);
   });
 
+  let nodeSet;
+  beforeEach(() => {
+    const { insert } = NodeDBCreators;
+    nodeSet = generateNodeSet();
+
+    store.dispatch(insert(nodeSet));
+  });
+
   test('Store matches spec', () => {
     const state = store.getState();
     expect(state.NodeDB.indexSpec).toEqual(indexSpec);
   });
 
   describe('Insertion', () => {
-    let nodeSet;
-    beforeAll(() => {
-      const { insert } = NodeDBCreators;
-      nodeSet = generateNodeSet();
-
-      store.dispatch(insert(nodeSet));
-    });
-
     test('Indices should exist', () => {
       const state = store.getState();
 
@@ -350,6 +350,32 @@ describe('NodeDB Indexing ', () => {
           ).toContain(product['id']);
         }
       });
+    });
+  });
+
+  describe('Enhancer', () => {
+    test('Should pass inflated indexed nodes', () => {
+      const state = store.getState();
+      const sampleIndexId = _.sample(
+        R.keys(state.NodeDB.indices.product.indexId1)
+      );
+
+      const ConnectedComponent = withIndexedNodes('product', 'indexId1')(
+        SampleComponent
+      );
+      const wrapper = mount(
+        <Provider store={store}>
+          <ConnectedComponent indexId={sampleIndexId} />
+        </Provider>
+      );
+      const props = wrapper.find(SampleComponent).props();
+
+      const expectedProducts = R.values(state.NodeDB.nodes.product).filter(
+        ({ indexId1 }) => indexId1 === sampleIndexId
+      );
+
+      for (let product of expectedProducts)
+        expect(props.indexedProductSet).toContain(product);
     });
   });
 });
