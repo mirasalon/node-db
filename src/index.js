@@ -1,6 +1,13 @@
 // @flow
-import NodeDB, { nodeDBReducer } from "./store";
-import { withNode, withoutNode } from "./enhancers";
-import { nodeSetToNodeMap } from "./utils/nodes";
+import NodeDB, { nodeDBReducer, createNodeDBReducer } from './store';
+import { withNode, withoutNode, withIndexedNodes } from './enhancers';
+import { nodeSetToNodeMap } from './utils/nodes';
 export default NodeDB;
-export { nodeDBReducer, withNode, withoutNode, nodeSetToNodeMap };
+export {
+  createNodeDBReducer,
+  nodeDBReducer,
+  withNode,
+  withIndexedNodes,
+  withoutNode,
+  nodeSetToNodeMap
+};
