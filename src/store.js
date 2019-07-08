@@ -4,6 +4,7 @@ import { createReducer, createActions } from "reduxsauce";
 import * as R from "ramda";
 import type { NodeId, NodeType, NodeSet, NodeMap, IndexSpec } from "./types";
 import { nodeSetToNodeMap, sanitizeNodeMap } from "./utils/nodes";
+import { nodeMapToIndex } from "./utils/indices";
 
 //#############################################################################
 //# ACTIONS
@@ -21,7 +22,7 @@ export const NodeDBTypes = Types;
 export default Creators;
 
 //#############################################################################
-//# STATE 
+//# STATE
 //#############################################################################
 
 export type NodeDBStateType = Immutable<{
@@ -53,7 +54,6 @@ const INITIAL_STATE: NodeDBStateType = Immutable.from({
   indexSpec: {}
 });
 
-
 //#############################################################################
 //# REDUCERS
 //#############################################################################
@@ -63,18 +63,23 @@ const insert = (
   state: NodeDBStateType,
   { nodes }: { nodes: NodeSet }
 ): NodeDBStateType => {
-  // =====[ DB ]=====
-  let updates = nodeSetToNodeMap(nodes);
-  updates = sanitizeNodeMap(updates);
+
+  // =====[ Nodes ]=====
+  let nodeUpdates = nodeSetToNodeMap(nodes);
+  nodeUpdates = sanitizeNodeMap(nodeUpdates);
+  let updates = {
+    nodes: nodeUpdates
+  };
 
   // =====[ INDICES ]=====
-  if ("product" in state.indexSpec) {
-    // TODO: get index updates
-    // console.log({ products: updates['product'] });
-    // const indexUpdates = 
+  if (!R.isEmpty(state.indexSpec)) {
+    const indices = nodeMapToIndex(nodeUpdates, state.indexSpec);
+    const indexUpdates = state.indices.merge(indices, { deep: true });
+    updates.indices = indexUpdates;
   }
 
-  return state.merge({ nodes: updates }, { deep: true });
+  // =====[ MERGE IN ]=====
+  return state.merge(updates, { deep: true });
 };
 
 const remove = (
@@ -92,7 +97,6 @@ export const nodeDBReducer = createReducer(INITIAL_STATE, {
   [Types.INSERT]: insert,
   [Types.REMOVE]: remove
 });
-
 
 //#############################################################################
 //# CREATION WITH INDICES

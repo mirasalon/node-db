@@ -297,8 +297,16 @@ test("NodeDB Index Insertion", () => {
   const store = getStore(indexSpec);
   const { insert } = NodeDBCreators;
   const nodeSet = generateNodeSet();
-  const state = store.getState();
   store.dispatch(insert(nodeSet));
-
+  const state = store.getState();
   expect(state.NodeDB.indexSpec).toEqual(indexSpec);
+  // console.log(state.NodeDB)
+  // console.log(state.NodeDB.indices);
+});
+
+test("NodeDB index grab", () => {
+  const indexSpec = {
+    product: ["indexId1", "indexId2"],
+    ugcImage: ["indexId1", "indexId2"]
+  };
 });

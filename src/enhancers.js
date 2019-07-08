@@ -105,3 +105,16 @@ export const withNode = (nodeType: NodeType) => {
     createNodeFetcher()
   );
 };
+
+//#############################################################################
+//# INDICES
+//#############################################################################
+
+// TODO: MURILLO, HELP ME HERE!
+export const withProductImages = compose(
+  withProps(({ productId }) => ({
+    nodeType: 'image',
+    indexId: productId
+  })),
+  multiIndexedNodeFetcher
+);

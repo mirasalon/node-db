@@ -3,7 +3,17 @@ import { nodeTableToIndex, nodeMapToIndex } from "./indices";
 import { generateNodeSet, generateNodeMap } from "./tests";
 import { nodeSetToNodeMap } from "./nodes";
 
-test("nodeTable to index", () => {
+test("nodeMapToIndex - empty nodeSpec", () => {
+  /* Makes sure the format conversion works*/
+  const nodeSet = generateNodeSet();
+  const nodeMap = nodeSetToNodeMap(nodeSet);
+  const indexSpec = {};
+  const indexUpdates = nodeMapToIndex(nodeMap, indexSpec);
+  expect(indexUpdates).toEqual({});
+});
+
+test("nodeMapToIndex - non-empty nodeSpec", () => {
+  /* Makes sure the format conversion works */
   const nodeSet = generateNodeSet();
   const nodeMap = nodeSetToNodeMap(nodeSet);
   const indexSpec = {
@@ -16,11 +26,15 @@ test("nodeTable to index", () => {
     R.keys(nodeMap[nodeType]).map(nodeId => {
       const node = nodeMap[nodeType][nodeId];
       if (node.nodeType in indexSpec) {
-        const isIndexed1 = indexUpdates[nodeType]['indexId1'][node.indexId1].includes(node.id);
-        const isIndexed2 = indexUpdates[nodeType]['indexId2'][node.indexId2].includes(node.id);
+        const isIndexed1 = indexUpdates[nodeType]["indexId1"][
+          node.indexId1
+        ].includes(node.id);
+        const isIndexed2 = indexUpdates[nodeType]["indexId2"][
+          node.indexId2
+        ].includes(node.id);
         expect(isIndexed1).toEqual(true);
         expect(isIndexed2).toEqual(true);
-      };
-    })
-  })
+      }
+    });
+  });
 });
