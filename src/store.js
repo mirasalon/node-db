@@ -1,10 +1,11 @@
 // @flow
-import Immutable from 'seamless-immutable';
-import { createReducer, createActions } from 'reduxsauce';
-import * as R from 'ramda';
-import type { NodeId, NodeType, NodeSet, IndexSpec } from './types';
-import { nodeSetToNodeMap, sanitizeNodeMap } from './utils/nodes';
-import { nodeMapToIndex } from './utils/indices';
+import "@babel/polyfill";
+import Immutable from "seamless-immutable";
+import { createReducer, createActions } from "reduxsauce";
+import * as R from "ramda";
+import type { NodeId, NodeType, NodeSet, IndexSpec } from "./types";
+import { nodeSetToNodeMap, sanitizeNodeMap } from "./utils/nodes";
+import { nodeMapToIndex } from "./utils/indices";
 
 //#############################################################################
 //# ACTIONS
@@ -12,10 +13,10 @@ import { nodeMapToIndex } from './utils/indices';
 
 const { Types, Creators } = createActions(
   {
-    insert: ['nodes'],
-    remove: ['nodeType', 'nodeIds']
+    insert: ["nodes"],
+    remove: ["nodeType", "nodeIds"]
   },
-  { prefix: 'NODE_DB_' }
+  { prefix: "NODE_DB_" }
 );
 
 export const NodeDBTypes = Types;
@@ -72,7 +73,7 @@ const insert = (
 
   return state
     .merge({ nodes: updates }, { deep: true })
-    .update('indices', R.mergeDeepWith(R.concat, R.__, newIndices));
+    .update("indices", R.mergeDeepWith(R.concat, R.__, newIndices));
 };
 
 const remove = (

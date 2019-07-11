@@ -1,4 +1,5 @@
 // @flow
+import '@babel/polyfill';
 import NodeDB, { nodeDBReducer, createNodeDBReducer } from './store';
 import { withNode, withoutNode, withIndexedNodes } from './enhancers';
 import { nodeSetToNodeMap } from './utils/nodes';
