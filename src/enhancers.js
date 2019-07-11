@@ -1,5 +1,5 @@
 // @flow
-import R from 'ramda';
+import * as R from 'ramda';
 import { connect } from 'react-redux';
 import { compose, mapProps, withProps } from 'recompose';
 import type { NodeType } from './types';
