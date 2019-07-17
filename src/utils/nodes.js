@@ -16,7 +16,7 @@ export const nodeSetToNodeMap = (nodeSet: NodeSet): NodeMap => {
 };
 
 export const sanitizeNodeType = nodeType => {
-  const nodeTypeLower = _nodeType.toLowerCase();
+  const nodeTypeLower = nodeType.toLowerCase();
 
   // special case for image(s), ugcImage(s), article(s), search(es) FML
   if (nodeTypeLower.includes('image') || nodeTypeLower.includes('article'))
