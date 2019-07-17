@@ -16,10 +16,12 @@ export const nodeSetToNodeMap = (nodeSet: NodeSet): NodeMap => {
 };
 
 export const sanitizeNodeType = nodeType => {
-  // special case for image(s), ugcImage(s), search(es) FML
-  if (nodeType.toLowerCase().includes('image'))
+  const nodeTypeLower = nodeType.toLowerCase();
+
+  // special case for image(s), ugcImage(s), article(s), search(es) FML
+  if (nodeTypeLower.includes('image') || nodeTypeLower.includes('article'))
     return nodeType.replace(/s$/, '');
-  if (nodeType.toLowerCase().includes('stories'))
+  if (nodeTypeLower.includes('stories'))
     return nodeType.replace(/ies$/, 'y');
   else return nodeType.replace(/e?s$/, '');
 };
