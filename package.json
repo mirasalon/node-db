@@ -34,7 +34,7 @@
     "precompile": "node_modules/@babel/cli/bin/babel.js src --out-dir lib"
   },
   "dependencies": {
-    "ramda": "^0.26.1",
+    "ramda": "0.25.0",
     "react-redux": "^6.0.0",
     "recompose": "^0.30.0",
     "redux": "^4.0.1",
