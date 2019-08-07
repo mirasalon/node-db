@@ -6,7 +6,6 @@ import type { NodeId, NodeType, NodeSet, IndexSpec } from "./types";
 import { nodeSetToNodeMap, sanitizeNodeMap } from "./utils/nodes";
 import { nodeMapToIndex } from "./utils/indices";
 
-console.log("HELLO WORLD");
 //#############################################################################
 //# ACTIONS
 //#############################################################################

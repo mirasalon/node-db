@@ -1,16 +1,15 @@
-// import * as R from "ramda";
-import { keys, is } from "ramda";
+import * as R from "ramda";
 
 import { NodeId, NodeType, Node, NodeSet, NodeMap } from "../types";
 
 export const nodeSetToNodeMap = (nodeSet: NodeSet): NodeMap => {
   const nodeMap = {};
-  keys(nodeSet).forEach(nodeType => {
+  R.keys(nodeSet).forEach(nodeType => {
     const nodes = nodeSet[nodeType];
 
-    if (!nodes || !is(Object, nodes)) return;
+    if (!nodes || !R.is(Object, nodes)) return;
 
-    if (!is(Array, nodes)) {
+    if (!R.is(Array, nodes)) {
       nodeMap[nodeType] = nodes;
       return;
     }
@@ -36,7 +35,7 @@ export const sanitizeNodeType = nodeType => {
 // products => product, searches => search
 export const sanitizeNodeMap = (nodeMap: NodeMap): NodeMap => {
   const output = {};
-  keys(nodeMap).map(nodeType => {
+  R.keys(nodeMap).map(nodeType => {
     output[sanitizeNodeType(nodeType)] = nodeMap[nodeType];
   });
   return output;
