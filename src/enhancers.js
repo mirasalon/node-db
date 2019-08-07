@@ -1,7 +1,5 @@
 // @flow
-// import * as R from "ramda";
-import R from "ramda";
-// import { omit } from "ramda";
+import * as R from "ramda";
 import { connect } from "react-redux";
 import { compose, mapProps, withProps } from "recompose";
 import type { NodeType } from "./types";

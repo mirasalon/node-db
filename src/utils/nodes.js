@@ -4,7 +4,6 @@ import { keys, is } from "ramda";
 import { NodeId, NodeType, Node, NodeSet, NodeMap } from "../types";
 
 export const nodeSetToNodeMap = (nodeSet: NodeSet): NodeMap => {
-  console.log("@@@@@", foobar);
   const nodeMap = {};
   keys(nodeSet).forEach(nodeType => {
     const nodes = nodeSet[nodeType];
