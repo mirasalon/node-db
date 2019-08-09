@@ -87,3 +87,27 @@ export const generateNodeDict = (nodeType: NodeType = null): NodeMap => {
     return nodeSet;
   }
 };
+
+export const generateSparseNodeSet = (nodeType: NodeType = null): NodeSet => {
+  if (nodeType)
+    return {
+      [nodeType]: _.range(0, 10).map(index =>
+        index % 3 ? generateNode(nodeType) : null
+      )
+    };
+  else {
+    let nodeSet = {};
+    sampleNodeTypes.forEach(nodeType => {
+      nodeSet[nodeType] = _.range(0, 10).map(index => {
+        if (index % 3) {
+          const indexId1 = _.sample(indexId1s);
+          const indexId2 = _.sample(indexId2s);
+          return generateNode(nodeType, indexId1, indexId2);
+        }
+
+        return null;
+      });
+    });
+    return nodeSet;
+  }
+};

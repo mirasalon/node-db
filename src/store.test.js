@@ -4,7 +4,12 @@ import * as R from "ramda";
 import _ from "lodash";
 import { createStore, combineReducers } from "redux";
 import NodeDBCreators, { createNodeDBReducer } from "./store";
-import { generateNode, generateNodeSet, generateNodeDict } from "./utils/tests";
+import {
+  generateNode,
+  generateNodeSet,
+  generateSparseNodeSet,
+  generateNodeDict
+} from "./utils/tests";
 import { sanitizeNodeType } from "./utils/nodes";
 import { withNode, withIndexedNodes } from "./index";
 import { mount } from "enzyme";
@@ -394,6 +399,31 @@ describe("NodeDB Indexing ", () => {
 
       for (let product of expectedProducts)
         expect(props.indexedProductSet).toContain(product);
+    });
+  });
+});
+
+//#############################################################################
+//# EXCEPTIONS
+//#############################################################################
+
+describe("Exceptions", () => {
+  let store;
+  beforeAll(() => {
+    store = getStore();
+  });
+
+  test("Should add non-null nodes when collection contains null nodes", () => {
+    const { insert } = NodeDBCreators;
+    const nodeSet = generateSparseNodeSet();
+
+    store.dispatch(insert(nodeSet));
+
+    const state = store.getState();
+    Object.keys(nodeSet).map(nodeType => {
+      for (let node of nodeSet[nodeType]) {
+        if (node) expect(state.NodeDB.nodes[nodeType][node.id]).toEqual(node);
+      }
     });
   });
 });

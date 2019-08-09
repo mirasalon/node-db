@@ -14,9 +14,11 @@ export const nodeSetToNodeMap = (nodeSet: NodeSet): NodeMap => {
     }
 
     nodeMap[nodeType] = {};
-    nodes.forEach(node => {
-      nodeMap[nodeType][node.id] = node;
-    });
+    nodes
+      .filter(node => !!node)
+      .forEach(node => {
+        nodeMap[nodeType][node.id] = node;
+      });
   });
   return nodeMap;
 };
