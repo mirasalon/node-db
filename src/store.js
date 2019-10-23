@@ -72,7 +72,7 @@ const insert = (
 
   return state
     .merge({ nodes: updates }, { deep: true })
-    .update('indices', R.mergeDeepWith(R.concat, R.__, newIndices));
+    .update('indices', R.mergeDeepWith((current, newIndices) => R.uniq(R.concat(current, newIndices)), R.__, newIndices));
 };
 
 const remove = (
