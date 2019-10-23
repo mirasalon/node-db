@@ -23,7 +23,7 @@
     "flow-bin": "^0.92.1",
     "flow-typed": "^2.5.1",
     "jest": "^24.1.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-test-renderer": "^16.8.1"
