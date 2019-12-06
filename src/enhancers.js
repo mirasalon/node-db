@@ -1,8 +1,16 @@
 // @flow
 import * as R from "ramda";
-import { connect } from "react-redux";
+import { connect as reduxConnect } from "react-redux";
 import { compose, mapProps, withProps } from "recompose";
 import type { NodeType } from "./types";
+
+let connect = reduxConnect;
+
+export const configureNodeDBEnhancer = (config = {}) => {
+  if (config.connect) {
+    connect = config.connect;
+  }
+}
 
 //#############################################################################
 //# UTILS
